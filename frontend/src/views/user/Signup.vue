@@ -248,6 +248,7 @@ export default {
           // sprin url 받기
           const uImage = 'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg'
           axios.post(`${server_URL}/letsmeet/user/join?uEmail=${this.user.uEmail}&uName=${this.user.uName}&uPassword=${this.user.uPassword}&uImage=${uImage}`)
+          
             .then(()=> {
               alert('회원가입 완료되었습니다.')
               this.$router.push({ name: 'Login'});
