@@ -1,23 +1,18 @@
 <template>
     <div>
-        <div>test</div>
+        <div id="naverIdLogin" style="display: none">login...</div>
     </div>
 </template>
 
 <script>
 const axios = require('axios');
-
-import { getKakaoToken, getKakaoUserInfo, naverService } from "@/services/kakaoLogin";
+const server_URL = process.env.VUE_APP_SERVER_URL
+import { getKakaoToken, getKakaoUserInfo } from "@/services/login";
 export default {
     name: 'KakaoCallback',
     created() {
         if (this.$route.query.code) {
             this.setKakaoToken();
-        }
-    },
-    mounted() {
-        if (this.$route.hash) {
-            naverService().getUserInfo();
         }
     },
     data: () => {
@@ -42,29 +37,40 @@ export default {
             this.$cookies.set('access-token', data.access_token, '1d');
             this.$cookies.set('refresh-token', data.refresh_token, '1d');
             await this.setUserInfo();
-
+            this.$router.replace('/');
         },
         async setUserInfo () {
             let user_data = await getKakaoUserInfo();
+            // console.log(user_data)
             // 여기에 백으로 계정 정보 넘겨주면 된다.
             this.user.uEmail = user_data.kakao_account.email+'_'+user_data.id;
             this.user.uPassword = 'kakaoPassword';
             this.user.uName = user_data.properties.nickname;
-            axios.post(`http://i4d107.p.ssafy.io:8000/letsmeet/auth/kakao/callback`, this.user)
-            .then((res)=> {
-              console.log(res.data)
-              this.$store.commit('SET_USER_AUTH_DATA', res.data)
-
-              this.$router.push({ name: 'Main'});
-            })
+            axios.post(`${server_URL}/letsmeet/auth/kakao/callback`, this.user)
+              .then((res) => {
+              // console.log(res);
+              let token = res.data['auth-token']
+              if (token === undefined) {
+                alert('비밀번호가 틀렸습니다.')}
+              else {
+                alert('로그인 되었습니다.')
+                // context.commit('SET_USER_AUTH_DATA', res.data)
+                localStorage.setItem('auth-token', token)
+                // axios default 헤더에 현재 token 적재
+                axios.defaults.headers.common['auth-token'] = window.localStorage.getItem("auth-token");
+                this.$store.commit('SET_USER_AUTH_DATA', res.data)
+                this.$router.push({ name: 'Main'})
+                }
+              })
             .catch((err) => {
               console.log(err)
+              alert('로그인에 실패하셨습니다.')
             })
         },
         submit () {
             if (this.$refs.form.validate()) {
                 // sprin url 받기
-                axios.post(`http://i4d107.p.ssafy.io:8000/letsmeet/auth/kakao/callback`, this.user ).then(()=> {
+                axios.post(`${server_URL}/letsmeet/auth/kakao/callback`, this.user ).then(()=> {
                     alert('카카오 소셜 로그인 완료되었습니다.')
                     this.$router.push({ name: 'Login'});
                 })
@@ -76,9 +82,6 @@ export default {
                 console.log('카카오 소셜 로그인에 실패')
             }
         },
-        getInfo() {
-            naverService().getUserInfo();
-        }
     }
 }
 </script>

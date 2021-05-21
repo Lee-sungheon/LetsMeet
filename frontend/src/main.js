@@ -16,6 +16,7 @@ import 'mdbvue/lib/css/mdb.min.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import VueCookies from "vue-cookies";
 
+
 window.Kakao.init("c626463e9b79a84d5a8185d060679ef3");
 
 Vue.use(Delay)
@@ -24,8 +25,8 @@ Vue.use(IconsPlugin)
 Vue.use(VueGeolocationApi/*, { ...options } */)
 Vue.config.productionTip = false
 Vue.use(VueCookies)
-
 Vue.$cookies.config("7d")
+
 
 new Vue({
   vuetify,

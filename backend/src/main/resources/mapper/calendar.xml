@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.anjanda.letsmeet.repository.mapper.CalendarMapper">
+
+	<!-- C :: 개인 일정 추가 -->
+	<insert id="insertCalendar">
+	insert into calendar
+		(c_u_no, c_date, c_content)
+	values
+		(#{cUNo}, #{cDate}, #{cContent})
+	</insert>
+	
+	<!-- R :: 개인 일정 조회 -->
+	<select id="selectCalendar" parameterType="int">
+	select *
+	  from calendar
+	 where c_u_no = #{cUNo}
+	</select>
+	
+	<!-- D :: 개인 일정 삭제 -->
+ 	<delete id="deleteCalendar">
+ 	delete
+ 	  from calendar
+ 	 where c_no = #{cNo}
+ 	</delete>
+</mapper>

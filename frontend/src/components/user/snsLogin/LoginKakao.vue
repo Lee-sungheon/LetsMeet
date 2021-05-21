@@ -12,7 +12,7 @@ export default {
     methods: {
         loginWithKakao() {
             const params = {
-                redirectUri: "http://i4d107.p.ssafy.io/kakaocallback",
+                redirectUri: "https://i4d107.p.ssafy.io/kakaocallback",
             };
             window.Kakao.Auth.authorize(params);
         },

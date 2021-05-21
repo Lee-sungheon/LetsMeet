@@ -13,51 +13,56 @@ export const store = new Vuex.Store({
     uEmail: null,
     uName: null,
     isLogin: false,
+    // default 이미지 값
+    uImage: null,
     uNo: null,
+    uSalt: null,
+    mrNo: null,
   },
-  // getters: {
-  //   get_user_name(state){
-  //     return state.uName
-  //   },
-  //   get_user_email(state){
-  //     return state.uEmail
-  // }
   mutations: {
     SET_USER_AUTH_DATA(state, payload){
       state.isLogin = true;
       state.uEmail = payload['uEmail']
       state.uName = payload['uName']
       state.uNo = payload['uNo']
+      if (!payload['uImage']) {
+        state.uImage = 'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg'
+      } else{
+        state.uImage = payload['uImage']
+      }
+      state.uSalt = payload['uSalt']
+      // console.log(state.uSalt)
     },
-    SET_USER_AUTU_DATA_LOGOUT(state) {
-      state.isLogin = false;
+    SET_USER_AUTH_DATA_LOGOUT(state) {
+      state.isLogin = false
       state.email = null
       state.name = null
       state.uNo = null
+      state.uImage= null
+      state.uSalt = null
+    },
+    SET_USER_NAME(state, uName) {
+      state.uName = uName
+    },
+    SET_USER_IMAGE(state, uImage) {
+      state.uImage = uImage
     }
+
   },
   actions: {
-    
-    // LOGIN (context, user) {
-    //   return axios
-    //   .post(`http://localhost:8000/letsmeet/login`, user)
-    //   .then((res) => {
-    //     let token = res.data['auth-token']
-    //     if (token === undefined) {
-    //       alert('비밀번호가 틀렸습니다.')
-    //     }
-    //     else {
-    //       alert('로그인 되었습니다.')
-    //       context.commit('SET_USER_AUTH_DATA', res.data)
-    //       localStorage.setItem('auth-token', token)
-    //       // axios default 헤더에 현재 token 적재
-    //       axios.defaults.headers.common['auth-token'] = window.localStorage.getItem("auth-token");
-    //       return true
-    //     }
-    //   })
+    FETCH_USER_NAME(context, uName){
+      context.commit('SET_USER_NAME', uName)
+    },
+    FETCH_USER_IMAGE(context, uImage){
+      context.commit('SET_USER_IMAGE', uImage) 
+    },
     LOGOUT(context) {
-      context.commit('SET_USER_AUTU_DATA_LOGOUT')
+      context.commit('SET_USER_AUTH_DATA_LOGOUT')
+      localStorage.removeItem('auth-token')
+    },
+    DELETE_ACCOUNT(context) {
+      context.commit('SET_USER_AUTH_DATA_LOGOUT')
       localStorage.removeItem('auth-token')
     }
-    },
+    }
 });

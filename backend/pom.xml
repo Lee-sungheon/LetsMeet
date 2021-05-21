@@ -148,6 +148,14 @@
             <artifactId>h2</artifactId>
             <version>1.4.197</version>
         </dependency>
+        
+        <!-- Email인증 => 발송을 위한 라이브러리 -->
+        <dependency>
+   	 		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+    		<version>1.4.3.RELEASE</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

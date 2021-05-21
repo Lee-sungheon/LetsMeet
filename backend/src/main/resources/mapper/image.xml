@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace = "com.anjanda.letsmeet.repository.mapper.ImageMapper">
+
+	<!-- U :: 사진첩 사진 추가 -->
+	<insert id="insertGalleryImage" parameterType="gallery">
+	insert into gallery
+		(g_mr_no, g_u_no, g_name)
+	values 
+		(#{gMrNo}, #{gUNo}, #{gName})
+	</insert>
+
+	<!-- R :: 이미지 조회 -->
+	<select id="selectImageList" parameterType="gallery" resultType="gallery">
+		select *
+		  from image
+		 where i_type=#{iType}
+	</select>
+	
+	<!-- U :: 유저 프로필사진 업데이트 -->
+	<update id="updateProfile" parameterType="user">
+	update user
+	   set u_image=#{uImage}
+	 where u_email=#{uEmail}
+	</update>
+	
+		<!-- U :: 약속방 사진 업데이트 -->
+	<update id="updateMeetingroomImage" parameterType="meetingroom">
+	update meetingroom
+	   set mr_image=#{mrImage}
+	 where mr_no=#{mrNo}
+	</update>
+	
+</mapper>

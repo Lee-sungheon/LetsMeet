@@ -20,13 +20,14 @@ import com.anjanda.letsmeet.user.service.UserService;
 
 /**
  * 
- * @Date : 2021. 2. 1.
+ * @Date : 2021. 2. 4.
  * @Team : AnJanDa
- * @author : 개발자명
+ * @author : 김동빈, 김지현
+ * @deploy : 김동빈
  * @Project : 레쓰밋 :: backend
- * @Function : 로그인 관련 컨트롤러
- * @Description 
- *	유저 관련된 것이지만, 로그인만 따로 처리해줄 필요성을 느껴 컨트롤러 부분만 뺌..(유저 컨트롤에 넣어도 되긴 함)
+ * @Function : 로그인 관련 컨트롤러 클래스
+ * @Description : 로그인 처리
+ *
  */
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)	// 이건 왜쓰지..
@@ -45,6 +46,7 @@ public class LoginController {
 	@PostMapping("/login")
 //	public String login(@RequestBody User user, HttpServletResponse response, HttpSession session) throws Exception {
 	public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response, HttpSession session) throws Exception {
+		
 		System.out.println(user+"유저정보"+user.getuEmail()+user.getuPassword());
 		Map<String, Object> resultMap = new HashMap<>();
 		User check = service.login(user);
@@ -57,9 +59,10 @@ public class LoginController {
 			resultMap.put("uEmail", check.getuEmail()); 
 			resultMap.put("uPassword", check.getuPassword());
 			resultMap.put("uName", check.getuName());
-			resultMap.put("uImageId", check.getuImageId());
+			resultMap.put("uImage", check.getuImage());
 			resultMap.put("uJoinDate", check.getuJoinDate());
 			resultMap.put("uProvider", check.getuProvider());
+			resultMap.put("uSalt", check.getuSalt());
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		}
 		resultMap.put("message", "로그인에 실패하였습니다.");
@@ -75,17 +78,73 @@ public class LoginController {
 		kakaoUser.setuProvider("kakao");
 		
 		// 가입자 혹은 비가입자 체크해서 처리
-//		try {
-//			User originUser = service.selectUser(kakaoUser);
-//			if(originUser == null) {
-//				System.out.println("카카오 아이디로 회원가입 성공");
-//				service.createKakaoUser(kakaoUser);
-//			}
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
+		try {
+			User originUser = service.selectUser(kakaoUser);
+			if(originUser == null) {
+				service.createKakaoUser(kakaoUser);
+				System.out.println("카카오 아이디로 회원가입 성공");
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		User toLogin = service.selectUser(user);
 		
-		return login(kakaoUser, response, session);
+		Map<String, Object> resultMap = new HashMap<>();
+		User check = service.kakaoLogin(toLogin);
+		if(check != null) {
+			String token = jwtService.create(check);
+			
+			resultMap.put("auth-token", token);
+			resultMap.put("uNo", check.getuNo());
+			resultMap.put("uEmail", check.getuEmail()); 
+			resultMap.put("uPassword", check.getuPassword());
+			resultMap.put("uName", check.getuName());
+			resultMap.put("uImage", check.getuImage());
+			resultMap.put("uJoinDate", check.getuJoinDate());
+			resultMap.put("uProvider", check.getuProvider());
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+		}
+		resultMap.put("message", "로그인에 실패하였습니다.");
+		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/auth/naver/callback")
+	public ResponseEntity<?> naverCallback(@RequestBody User user, HttpServletResponse response, HttpSession session) throws Exception { // Data를 return 해주는 controller method
+		User naverUser = new User();
+		naverUser.setuEmail(user.getuEmail());
+		naverUser.setuPassword(user.getuPassword());
+		naverUser.setuName(user.getuName());
+		naverUser.setuProvider("naver");
+		
+		// 가입자 혹은 비가입자 체크해서 처리
+		try {
+			User originUser = service.selectUser(naverUser);
+			if(originUser == null) {
+				service.createNaverUser(naverUser);
+				System.out.println("네이버 아이디로 회원가입 성공");
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		User toLogin = service.selectUser(user);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		User check = service.naverLogin(toLogin);
+		if(check != null) {
+			String token = jwtService.create(check);
+			
+			resultMap.put("auth-token", token);
+			resultMap.put("uNo", check.getuNo());
+			resultMap.put("uEmail", check.getuEmail()); 
+			resultMap.put("uPassword", check.getuPassword());
+			resultMap.put("uName", check.getuName());
+			resultMap.put("uImage", check.getuImage());
+			resultMap.put("uJoinDate", check.getuJoinDate());
+			resultMap.put("uProvider", check.getuProvider());
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+		}
+		resultMap.put("message", "로그인에 실패하였습니다.");
+		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
 	}
 }
 

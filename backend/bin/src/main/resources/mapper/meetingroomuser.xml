@@ -3,27 +3,30 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.anjanda.letsmeet.repository.mapper.MeetingRoomUserMapper">
+
+
+
 	<!-- C :: 약속방 내 멤버 추가 (일단 모두가 가능하도록..) 수정 무조건 필요함.. 방장이나 타인이 초대한다했을 때, 초대받은 사람이 직접 위치이런거 잡아야해서..-->
 	<insert id="insertMeetingRoomUser">
 	insert into meetingroomuser
-		('mr_no', 'mru_u_no') 
+		(mru_mr_no, mru_u_no) 
 	values
-		(#{mrNo}, #{uNo})
+		(#{mruMrNo}, #{mruUNo})
 	</insert>
 
 	<!-- R :: 약속방 내 멤버 조회 .. 일단은 약속방에 속한 사람들의 이름만...-->
-	<select id="selectMyMeetingRoomUser" parameterType="meetingRoomUser" resultType="user">
-	select u_name
+	<select id="selectMyMeetingRoomUser" resultType="com.anjanda.letsmeet.repository.dto.MeetingRoomUserInfo">
+	select *
 	  from user inner join meetingroomuser
 	    on user.u_no = meetingroomuser.mru_u_no
-	 where mru_mr_no = #{mrNo}
+	 where mru_mr_no = #{mrNo};
 	</select>
 
 	<!-- U :: 약속방에 속한 본인의 위치 설정 -->
-	<update id="updateMeetingRoomUserLocation" parameterType="meetingRoomUser">
+	<update id="updateMeetingRoomUserSet">
 	update meetingroomuser
-	   set mru_user_lat=#{mruUserLat}, mru_user_lng=#{mruUserLng}
-     where mru_mr_no = #{mrNo} and mru_u_no = #{uNo}
+	   set mru_user_lat=#{mruUserLat}, mru_user_lng=#{mruUserLng},mru_user_dates=#{mruUserDates}
+     where mru_mr_no = #{mruMrNo} and mru_u_no = #{mruUNo}
 	</update>
 
 	<!-- U :: 약속방에 속 한 본인의 일정 설정 -->
@@ -32,6 +35,13 @@
 	   set mru_user_date=concat(mru_user_date,', ',#{mrUserDate})
      where mru_mr_no = #{mrNo} and mru_u_no = #{uNo}	
 	</update>
+	
+	<!-- D :: 약속방 삭제 -->
+	<delete id="deleteMeetingRoomUser">
+		delete 
+		  from meetingroomuser
+		 where mru_mr_no=#{mruMrNo} and mru_u_no=#{mruUNo};
+	</delete>
 
 </mapper>
 

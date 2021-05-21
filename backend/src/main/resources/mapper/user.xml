@@ -4,64 +4,96 @@
 	
 <mapper namespace = "com.anjanda.letsmeet.repository.mapper.UserMapper">
 
-<!-- resultMap 사용 방법 -->
-
-
-<!-- C :: 회원 가입 -->
+	<!-- C :: 회원 가입 -->
 	<insert id="insertUser" parameterType="user">
 	insert into user
-		(`u_no`, `u_email`, `u_password`, `u_name`, `u_join_date`)
+		(u_no, u_email, u_password, u_name, u_join_date, u_salt)
 	values
-		(#{uNo}, #{uEmail}, #{uPassword}, #{uName}, now());
+		(#{uNo}, #{uEmail}, #{uPassword}, #{uName}, now(), #{uSalt});
 	</insert>
 
-<!-- C :: 카카오 회원 가입 -->
+	<!-- C :: 카카오 회원 가입 -->
 	<insert id="insertKakaoUser" parameterType="user">
 		insert
-		  into user(u_email, u_password, u_name, u_provider, u_join_date)
-		values (#{uEmail}, #{uPassword}, #{uName}, #{uProvider}, now())
+		  into user(u_no, u_email, u_password, u_name, u_provider, u_join_date)
+		values (#{uNo}, #{uEmail}, #{uPassword}, #{uName}, #{uProvider}, now())
 	</insert>
 
-<!-- R :: 로그인 -->
-	<select id="selectUserLogin" parameterType="user" resultType="user">
+	<!-- C :: 네이버 회원 가입 -->
+	<insert id="insertNaverUser" parameterType="user">
+		insert
+		  into user(u_no, u_email, u_password, u_name, u_provider, u_join_date)
+		values (#{uNo}, #{uEmail}, #{uPassword}, #{uName}, #{uProvider}, now())
+	</insert>
+
+	<!-- R :: 로그인 -->
+	<select id="selectUserLogin" resultType="user">
 		select *
 		  from user
 		 where u_email=#{uEmail} and u_password=#{uPassword}
 	</select>
 
-<!-- R :: 회원 상세 조회 -->
+	<!-- R :: 회원 상세 조회 -->
 	<select id="selectUser" parameterType="user" resultType="user">
 		select *
 		  from user
 		 where u_email=#{uEmail}
 	</select>
 
-<!-- U :: 회원 정보 수정 -->
-	<update id="updateUser" parameterType="user">
+	<!-- U :: 회원 비밀번호 변경 --> 
+	<update id="updateUserPassword" parameterType="user">
 		update user
-		   set u_password=#{uPassword}, u_name=#{uName}, u_image_id=#{uImageId} 
+		   set u_password=#{uPassword}, u_salt=#{uSalt}
+		 where u_email=#{uEmail}
+	</update>
+
+	<!-- U :: 회원 이름 변경 --> 
+	<update id="updateUserName" parameterType="user">
+		update user
+		   set u_name=#{uName}
 		 where u_email=#{uEmail}
 	</update>
 	
-<!-- D :: 회원 탈퇴 -->
-	<delete id="deleteUser" parameterType="user">
+	<!-- D :: 회원 탈퇴  and u_password=#{uPassword} 빼줌  -->
+	<delete id="deleteUser" parameterType="string">
 		delete 
 		  from user 
-		 where u_Email=#{uEmail} and u_password=#{uPassword}
+		 where u_email=#{uEmail}
 	</delete>
 
-<!-- CRUD 외 추가 기능 -->
-<!-- 이메일 중복 체크 -->
-	<select id="existEmail" parameterType="user" resultType="int">
+	<!-- 이메일 중복 체크 -->
+	<select id="existEmail" resultType="int">
 		select count(*)
 		  from user
-		 where u_email = #{uEmail}
+		 where u_email = #{email}
 	</select>
 	
-<!-- 비밀번호 찾기 -->
+	<!-- 비밀번호 찾기 -->
 	<select id="selectPassword" parameterType="com.anjanda.letsmeet.repository.dto.User" resultType="string">
 		select u_password 'uPassword'
 		  from user
 		 where u_email=#{uEmail} and u_name=#{uName}
 	</select>
+	
+	<!-- 로그인 시, 최초 salt를 얻기위함 -->
+	<select id="getuSaltByEmail" resultType="string">
+		select u_salt
+		  from user
+		 where u_email = #{uEmail}
+	</select>
+	
+	<!-- 유저 아이디 찾기 -->
+	<select id="selectEmailByName" parameterType="string" resultType="string">
+		select u_email
+		  from user
+		 where u_name = #{uName}
+	</select>
+
+	<!-- 비밀번호 찾기(정확히는 임시비번으로 변경) -->
+	<update id="selectPasswordByEmail" parameterType="string">
+		update user
+		   set u_password = #{tempPassword}
+		 where u_email = #{uEmail}
+	</update>
+
 </mapper>

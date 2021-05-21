@@ -21,11 +21,12 @@
             prepend-icon="mdi-lock"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
+            @keyup.enter='loginsubmit'
         />
  
     </v-card-text>
     <v-card-actions>
-        <v-btn @click='loginsubmit' color="success" rounded style='width:100%'>Login</v-btn>
+        <v-btn @click='loginsubmit' class="text-white" color="indigo accent-2" rounded style='width:100%'>Login</v-btn>
     </v-card-actions>
     </v-form>
   </div>
@@ -34,6 +35,7 @@
 
 <script>
 const axios = require('axios');
+const server_URL = process.env.VUE_APP_SERVER_URL
 export default {
     name: 'LoginForm',
 
@@ -46,7 +48,7 @@ export default {
         else {
           console.log('확인')
           localStorage.setItem('auth-token', '')
-          axios.post(`http://i4d107.p.ssafy.io:8000/letsmeet/login`, this.user)
+          axios.post(`${server_URL}/letsmeet/login`, this.user)
             .then((res) => {
               let token = res.data['auth-token']
               if (token === undefined) {
@@ -61,6 +63,10 @@ export default {
                 this.$router.push({ name: 'Main'})
                 }
               })
+            .catch((err) => {
+              console.log(err)
+              alert('로그인에 실패하셨습니다.')
+            })
           // this.$store // 현재 컴포넌트에서 저장소 접근하여
           //   .dispatch('LOGIN', this.user) // 비동기적인 Actions에 접근한다 (현 컴포넌트의 user 데이터를 가지고, 저장소에 LOGIN이라는 Actions에 접근)
           //   .then((res) => 

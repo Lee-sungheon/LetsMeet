@@ -11,12 +11,22 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * 
+ * @Date : 2021. 2. 1.
+ * @Team : AnJanDa
+ * @author : 김지현, 김동빈, 임호빈
+ * @deploy : 김동빈
+ * @Project : 레쓰밋 :: backend
+ * @Function : REST API 방식으로 데이터 전송 잘 오고가는지 확인하기 위한 Swagger
+ * @Description
+ *	- http://localhost:8000/letsmeet/swagger-ui.html 해당 주소로 swagger 활용(백엔드 실행후...)
+ */
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
-	// 24라인에서.. 컨트롤러 연결시켜야하는데 흠?
-	//http://localhost:8000/letsmeet/swagger-ui.html
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2)

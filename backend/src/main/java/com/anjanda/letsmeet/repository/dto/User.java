@@ -1,9 +1,29 @@
 package com.anjanda.letsmeet.repository.dto;
 
+/**
+ * 
+ * @Date : 2021. 2. 5.
+ * @Team : AnJanDa
+ * @author : 김동빈, 김지현, 임호빈
+ * @deploy : 김동빈
+ * @Project : 레쓰밋 :: backend
+ * @Function : 데이터 VO 클래스
+ * @Description
+ *	- 롬복 사용해서 getter, setter 사용함 (그래서 아래 메소드들 필요없음)
+ */
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@Getter
+@Setter
+@ToString
 public class User {
 
 	@Id // Primary key
@@ -12,10 +32,12 @@ public class User {
 	private String uEmail;
 	private String uPassword;
 	private String uName;
-	private int uImageId;
+	private String uImage;
 	private String uJoinDate;
 	private String uProvider;
-	
+	private String uAuthority;
+	private String uSalt;
+	private String uJwt;
 	public int getuNo() {
 		return uNo;
 	}
@@ -40,11 +62,11 @@ public class User {
 	public void setuName(String uName) {
 		this.uName = uName;
 	}
-	public int getuImageId() {
-		return uImageId;
+	public String getuImage() {
+		return uImage;
 	}
-	public void setuImageId(int uImageId) {
-		this.uImageId = uImageId;
+	public void setuImage(String uImage) {
+		this.uImage = uImage;
 	}
 	public String getuJoinDate() {
 		return uJoinDate;
@@ -58,10 +80,23 @@ public class User {
 	public void setuProvider(String uProvider) {
 		this.uProvider = uProvider;
 	}
-	@Override
-	public String toString() {
-		return "User [uNo=" + uNo + ", uEmail=" + uEmail + ", uPassword=" + uPassword + ", uName=" + uName
-				+ ", uImageId=" + uImageId + ", uJoinDate=" + uJoinDate + ", uProvider=" + uProvider + "]";
+	public String getuAuthority() {
+		return uAuthority;
+	}
+	public void setuAuthority(String uAuthority) {
+		this.uAuthority = uAuthority;
+	}
+	public String getuSalt() {
+		return uSalt;
+	}
+	public void setuSalt(String uSalt) {
+		this.uSalt = uSalt;
+	}
+	public String getuJwt() {
+		return uJwt;
+	}
+	public void setuJwt(String uJwt) {
+		this.uJwt = uJwt;
 	}
 	
 	

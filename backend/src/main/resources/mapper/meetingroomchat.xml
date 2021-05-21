@@ -2,23 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="com.anjanda.letsmeet.repository.mapper.MeetingRoomChatMapper">
+<mapper namespace="com.anjanda.letsmeet.repository.mapper.MeetingRoomChatMapper">
 	
-	<select id="selectChatByRno" resultType="MeetingRoomChat" parameterType="meetingRoomChat">
-	
-	select *
-	from meetingroomchat
-	where mrc_mr_no=#{mrcMrNo};
-	
-	</select>
-
-
+	<!-- C :: 채팅 추가하기 -->
 	<insert id="createMeetingRoomChat" parameterType="meetingRoomChat">
-	INSERT INTO letsmeet.meetingroomchat
-	(mrc_mr_no, mrc_u_no, mrc_content, mrc_date)
-	VALUES(#{mrcMrNo}, #{mrcUNo}, #{mrcContent}, now());
-	
+	insert into meetingroomchat	
+		(mrc_mr_no, mrc_u_no, mrc_content, mrc_date)
+	values
+		(#{mrcMrNo}, #{mrcUNo}, #{mrcContent}, now());
 	</insert>
+	
+	<!-- R :: 약속방 번호를 통한 채팅방 조회 -->
+	<select id="selectChatByRno" resultType="MeetingRoomChat" parameterType="meetingRoomChat">
+	select *
+	  from meetingroomchat
+	 where mrc_mr_no=#{mrcMrNo};
+	</select>
 
 </mapper>

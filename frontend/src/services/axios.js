@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://i4d107.p.ssafy.io';
+axios.defaults.baseURL = 'https://i4d107.p.ssafy.io';
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {

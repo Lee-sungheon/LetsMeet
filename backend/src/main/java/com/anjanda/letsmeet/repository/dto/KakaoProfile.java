@@ -2,12 +2,25 @@ package com.anjanda.letsmeet.repository.dto;
 
 import lombok.Data;
 
+/**
+ * 
+ * @Date : 2021. 2. 5.
+ * @Team : AnJanDa
+ * @author : 김동빈
+ * @deploy : 김동빈
+ * @Project : 레쓰밋 :: backend
+ * @Function : 데이터 VO 클래스
+ * @Description
+ *	- 롬복 사용해서 getter, setter 사용함 (그래서 아래 메소드들 필요없음)
+ */
+
 @Data
 public class KakaoProfile {
 	public Integer id;
 	public String connected_at;
 	public Properties properties;
 	public KakaoAccount kakao_account;
+	private String uJwt;
 
 	@Data
 	public class Properties {

@@ -4,18 +4,15 @@
 
 <mapper namespace="com.anjanda.letsmeet.repository.mapper.MeetingRoomMapper">
 
-<!-- resultMap 사용 방법 -->
-
-
-<!-- C :: 약속방 생성하기 -->
+	<!-- C :: 약속방 생성하기 -->
 	<insert id="insertMeetingRoom" parameterType="MeetingRoom">
 	insert into meetingroom
-		(mr_super_u_no, mr_name, mr_category, mr_date_start, mr_date_end)
+		(mr_super_u_no, mr_name, mr_category, mr_date_start, mr_date_end, mr_u_cnt)
 	values
-		(#{mrSuperUNo}, #{mrName}, #{mrCategory}, #{mrDateStart}, #{mrDateEnd})
+		(#{mrSuperUNo}, #{mrName}, #{mrCategory}, #{mrDateStart}, #{mrDateEnd},1)
 	</insert>
 
-<!-- R :: 사용자의 약속방 전체 조회 -->
+	<!-- R :: 사용자의 약속방 전체 조회 -->
 	<select id="selectMeetingRoom" resultType="meetingRoom">
 		select *
 		  from meetingroom inner join meetingroomuser
@@ -23,41 +20,62 @@
 		 where meetingroomuser.mru_u_no = #{uNo}
 	</select>
 	
-<!-- R :: 약속방 상세 조회 -->
+	<!-- R :: 약속방 상세 조회 -->
 	<select id="selectMeetingRoomByMrNo" resultType="meetingRoom">
 		select *
 		  from meetingroom
 		 where mr_no=#{mrNo}
 	</select>	
+	
+	<!-- R :: 캘린더에 표시될 확정된 약속방 조회 -->
+	<select id="selectCertainMeetingRoom" resultType="meetingRoom">
+		select *
+		  from meetingroom inner join meetingroomuser
+		    on meetingroom.mr_no = meetingroomuser.mru_mr_no
+		 where meetingroomuser.mru_u_no = #{uNo} and mr_date is not null
+	</select>
 
-<!-- U :: 약속방 정보 수정 (방이름, 카데고리, 시작기간, 끝기간) -->
+	<!-- U :: 약속방 정보 수정 (방이름, 카데고리, 시작기간, 끝기간) -->
 	<update id="updateMeetingRoom" parameterType="meetingRoom">
 		update meetingroom
 		   set mr_name=#{mrName}, mr_category=#{mrCategory}, mr_date_start=#{mrDateStart}, mr_date_end=#{mrDateEnd}
 		 where mr_no = #{mrNo}
 	</update>
 
-<!-- D :: 약속방 삭제 -->
+	<!-- D :: 약속방 삭제 -->
 	<delete id="deleteMeetingRoom" parameterType="int">
 		delete 
 		  from meetingroom 
 		 where mr_no=#{mrNo}
 	</delete>
 
-<!-- CRUD 외 추가 기능 -->
+	<!-- 약속방 구성원 테이블 생성? -->
 	<insert id="createMeetingRoomUser">
-	INSERT INTO `letsmeet`.`meetingroomuser`
-(`mru_mr_no`,`mru_u_no`)
-VALUES
-(#{mrNo},#{uNo});
+	insert into meetingroomuser
+		(`mru_mr_no`,`mru_u_no`)
+	values
+		(#{mrNo},#{uNo});
 	</insert>
 
-<select id="selectMeetingRoomBySuper">
-select `mr_no`
-from meetingroom
-where `mr_super_u_no`=#{mrSuperUNo} and `mr_name`=#{mrName} and `mr_category`=#{mrCategory};
-
-
-</select>
+	<!-- 방장이 생성한 방번호 출력 -->
+	<select id="selectMeetingRoomBySuper" resultType="int">
+	select `mr_no`
+	  from meetingroom
+	 where `mr_super_u_no`=#{mrSuperUNo} and `mr_name`=#{mrName} and `mr_category`=#{mrCategory}
+	 order by `mr_no` desc
+	 limit 1;
+	</select>
+	
+	<update id="updateMeetingRoomCntUp">
+			update meetingroom
+		   set mr_u_cnt= mr_u_cnt + 1
+		 where mr_no = #{mrNo};
+	</update>
+	
+	<update id="updateMeetingRoomCntDown">
+			update meetingroom
+		   set mr_u_cnt= mr_u_cnt - 1
+		 where mr_no = #{mrNo};
+	</update>
 </mapper>
 	

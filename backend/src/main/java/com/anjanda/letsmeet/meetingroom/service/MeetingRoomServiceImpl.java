@@ -10,9 +10,10 @@ import com.anjanda.letsmeet.repository.mapper.MeetingRoomMapper;
 
 /**
  * 
- * @Date : 2021. 2. 1.
+ * @Date : 2021. 2. 4.
  * @Team : AnJanDa
- * @author : 개발자명
+ * @author : 김지현
+ * @deploy : 김동빈
  * @Project : 레쓰밋 :: backend
  * @Function : 약속방 서비스 클래스
  * @Description
@@ -59,6 +60,22 @@ public class MeetingRoomServiceImpl implements MeetingRoomService{
 		return meetingRoomMapper.updateMeetingRoom(meetingRoom) == 1;
 	}
 	
+	@Override
+	public boolean updateMeetingRoomMidpoint(MeetingRoom meetingRoom) {
+		// TODO Auto-generated method stub
+		return meetingRoomMapper.updateMeetingRoomMidpoint(meetingRoom)==1;
+	}
+	
+	@Override
+	public boolean updateMeetingRoomFinalDate(MeetingRoom meetingRoom) throws Exception {
+		return meetingRoomMapper.updateMeetingRoomFinalDate(meetingRoom)==1;
+	}
+	
+	@Override
+	public boolean updateMeetingRoomFinalPlace(MeetingRoom meetingRoom) throws Exception {
+		return meetingRoomMapper.updateMeetingRoomFinalPlace(meetingRoom)==1;
+	}
+	
 	/* D :: 약속방 삭제 */
 	@Override
 	public boolean deleteMeetingRoom(int mrNo) throws Exception {
@@ -77,5 +94,25 @@ public class MeetingRoomServiceImpl implements MeetingRoomService{
 		// TODO Auto-generated method stub
 		return meetingRoomMapper.selectMeetingRoomBySuper(meetingRoom);
 	}
+
+	@Override
+	public void updateMeetingRoomCntUp(int mruMrNo) {
+		meetingRoomMapper.updateMeetingRoomCntUp(mruMrNo);
+		
+	}
+
+	@Override
+	public void updateMeetingRoomCntDown(int mruMrNo) {
+		meetingRoomMapper.updateMeetingRoomCntDown(mruMrNo);
+		
+	}
+
+	@Override
+	public void updateMeetingRoomUser(int mrNo) {
+		meetingRoomMapper.updateMeetingRoomUserInMeetingRoom(mrNo);
+		
+	}
+
+
 
 }

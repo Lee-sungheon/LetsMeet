@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.anjanda.letsmeet.repository.mapper.GalleryMapper">
+
+	<!-- C :: 추억 공유 추가 -->
+	<insert id="insertGallery">
+	insert into gallery
+		(g_no, g_mr_no, g_u_no, g_name)
+	values
+		(#{gNo}, #{gMrNo}, #{gUNo}, #{gName})
+	</insert>
+	
+	<!-- R :: 추억 공유 조회 -->
+	<select id="selectGallery" parameterType="int" resultType="gallery">
+	select *
+	  from gallery
+	 where g_mr_no = #{gMrNo}
+	</select>
+	
+	<!-- U :: 추억 공유 수정 -->
+	<update id="updateGallery">
+	update
+	   set g_name = #{gName}
+	 where g_no = #{gNo}
+	</update>
+	
+	<!-- D :: 추억 공유 삭제 -->
+	<delete id="deleteGallery">
+	delete
+	  from gallery
+	 where g_no = #{gNo}
+	</delete>
+
+</mapper>

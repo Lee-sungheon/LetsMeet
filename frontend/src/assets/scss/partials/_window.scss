@@ -1,0 +1,9 @@
+.window {
+  @include flex(column);
+  @include box-shadow(0 0 2px $madison);
+  max-width: 500px !important;
+  height: 450px !important;
+  border: 0px solid transparent;
+  border-radius: 15px;
+  overflow: hidden;
+}

@@ -3,6 +3,18 @@ package com.anjanda.letsmeet.repository.dto;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * 
+ * @Date : 2021. 2. 5.
+ * @Team : AnJanDa
+ * @author : 김동빈
+ * @deploy : 김동빈
+ * @Project : 레쓰밋 :: backend
+ * @Function : 데이터 VO 클래스
+ * @Description
+ *	- 롬복 사용해서 getter, setter 사용함 (그래서 아래 메소드들 필요없음)
+ */
+
 @Data
 @Builder
 public class GoogleOAuthRequest {

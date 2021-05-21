@@ -2,22 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="com.anjanda.letsmeet.repository.mapper.StoreMapper">
+<mapper namespace="com.anjanda.letsmeet.repository.mapper.StoreMapper">
 	
-	
-	<select id="reviewStoreByDong" resultType="Store">
-		select *
-		  from store
-		 where s_dong = #{sDong}
-	</select>
+	<!-- 동입력을 통한 가게 조회 -->
 	<select id="selectStoreByDong" resultType="Store">
 		select *
 		  from store
 		 where s_dong = #{sDong}
 	</select>
-	
-	
+
+	<!-- 동입력을 통한 가게 리뷰 조회 -->
+	<select id="reviewStoreByDong" resultType="Store">
+		select *
+		  from store
+		 where s_dong = #{sDong}
+	</select>
+
+	<!-- 좌표를 참고한 해당 가게의 리뷰 조회 -->	
 	<select id="reviewStoreByPoint" parameterType="com.anjanda.letsmeet.repository.dto.Store" resultType="Store">
 		select *
 		  from store
@@ -25,6 +26,7 @@
 	</select>
 	
 	
+	<!-- 중간 좌표를 참고한 일정 반경 내 리뷰 조회 -->	<!-- 유형으로 거르는 등 나중에 수정 필요 -->
 	<select id="reviewStoreByMidPoint" parameterType="com.anjanda.letsmeet.repository.dto.Store" resultType="Store">
 		select *
 		  from store
